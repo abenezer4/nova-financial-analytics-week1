@@ -15,7 +15,7 @@ def load_news_data(filepath):
         raise FileNotFoundError(f"The file {filepath} was not found.")
         
     print(f"Loading data from {filepath}...")
-    df = pd.read_csv(filepath, index_col=0)
+    df = pd.read_csv(filepath)
     
 
    
