@@ -1,0 +1,4 @@
+# Ignore environment files
+.venv
+venv2
+data/
