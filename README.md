@@ -1,43 +1,46 @@
-# nova-financial-analytics-week1
-Predicting Price Moves with News Sentiment
-Project Overview
-This project, developed for Nova Financial Solutions, aims to enhance financial forecasting by integrating qualitative news sentiment with quantitative stock market data. The core objective is to determine if the sentiment of financial news headlines (Positive, Negative, Neutral) can serve as a predictive signal for daily stock price movements.
 
-By leveraging Natural Language Processing (NLP) and statistical correlation, this analysis seeks to move beyond traditional technical indicators and provide actionable, sentiment-driven investment strategies.
+# Nova Financial Analytics – Week 1  
+**Predicting Stock Price Movements Using News Sentiment**
 
-Repository Structure
-The project follows a modular data science structure to ensure reproducibility and scalability.
 
-Plaintext
+## Project Overview
+This project, developed for **Nova Financial Solutions**, enhances financial forecasting by integrating **qualitative news sentiment** with **quantitative stock market data**. The core objective is to determine if the sentiment of financial news headlines (Positive, Negative, Neutral) can serve as a predictive signal for daily stock price movements.  
 
-nova-financial-analytics/
-├── .github/
-│   └── workflows/       # CI/CD pipelines (e.g., unit tests)
-├── data/                # Raw and processed datasets (excluded from git)
+By leveraging **Natural Language Processing (NLP)**, **technical indicators**, and **statistical correlation analysis**, this work moves beyond traditional charting methods and provides actionable, sentiment-driven investment strategies.
+
+---
+
+## Repository Structure
+```
+nova-financial-analytics-week1/
+├── .github/             # CI/CD workflows (unit tests, automation)
+├── data/                # Raw and processed datasets (excluded via .gitignore)
 ├── notebooks/           # Jupyter notebooks for analysis
-│   ├── EDA.ipynb        # Exploratory Data Analysis (News data)
-│   ├── Technical_Analysis.ipynb # Stock Indicators & Visualization
-│   └── Sentiment_Analysis.ipynb # NLP & Correlation (In Progress)
+│   ├── EDA.ipynb                # Exploratory Data Analysis (news dataset)
+│   ├── Technical_Analysis.ipynb # Stock indicators & visualization
+│   └── Sentiment_Correlation.ipynb # NLP sentiment scoring & correlation
 ├── src/                 # Reusable Python modules
 │   ├── __init__.py
 │   ├── loader.py        # Data ingestion and cleaning utilities
-│   ├── analysis.py      # Financial metrics & indicators logic
+│   ├── analysis.py      # Technical indicators & financial metrics
 │   └── plotting.py      # Custom visualization functions
-├── tests/               # Unit tests for src modules
-├── .gitignore           # Files to ignore (e.g., venv, data)
+├── tests/               # Unit tests for reproducibility
+├── .gitignore           # Ignore venv, data dumps, etc.
 ├── requirements.txt     # Python dependencies
 └── README.md            # Project documentation
-Installation & Setup
-To run this project locally, follow these steps:
+```
 
-1. Clone the Repository
-Bash
+---
 
-git clone https://github.com/YOUR_USERNAME/nova-financial-analytics.git
-cd nova-financial-analytics
-2. Create a Virtual Environment
-Bash
+## Installation & Setup
+1. **Clone the Repository**
+```bash
+git clone https://github.com/abenezer4/nova-financial-analytics-week1.git
+cd nova-financial-analytics-week1
+```
 
+2. **Create a Virtual Environment**
+```bash
 # Windows
 python -m venv venv
 .\venv\Scripts\activate
@@ -45,76 +48,90 @@ python -m venv venv
 # Mac/Linux
 python3 -m venv venv
 source venv/bin/activate
-3. Install Dependencies
-Bash
+```
 
+3. **Install Dependencies**
+```bash
 pip install -r requirements.txt
-Note for Windows Users: If you encounter errors installing TA-Lib, download the pre-built binary from Christoph Gohlke's library or execute:
+```
 
-Bash
-
+>  **Note for Windows Users:** If you encounter errors installing TA-Lib, use:  
+```bash
 conda install -c conda-forge ta-lib
-Key Analysis Modules
-1. Exploratory Data Analysis (EDA)
-Goal: Understand the characteristics of the financial news dataset.
+```
 
-Key Findings:
+---
 
-Headline Length: Headlines are concise (50-80 chars), optimized for rapid trader consumption.
+##  Key Analysis Modules
 
-Publisher Bias: A small number of publishers (e.g., Benzinga) dominate the news volume.
+### 1. Exploratory Data Analysis (EDA)
+**Goal:** Understand the characteristics of the financial news dataset.  
+**Findings:**  
+- Headlines are concise (50–80 chars).  
+- Publisher bias: Benzinga dominates (>70%).  
+- Timestamp anomaly (“Midnight Spike”) → required daily aggregation.  
+**Visuals:** Histogram of headline lengths, publisher pie chart, publication frequency plot.
 
-Data Anomaly: A "Midnight Spike" in timestamps was discovered, necessitating a shift to Daily Aggregation for correlation analysis.
+---
 
-2. Quantitative Analysis
-Goal: Compute technical indicators to contextualize price movements.
+### 2. Quantitative Analysis
+**Goal:** Compute technical indicators to contextualize price movements.  
+**Tools:** TA-Lib, PyNance, pandas.  
+**Metrics:**  
+- SMA (20 & 50-day) → trend identification.  
+- RSI → overbought/oversold signals.  
+- MACD → momentum tracking.  
+- Volatility & Sharpe ratio → risk-adjusted returns.  
+**Visuals:** SMA overlays, RSI plot, MACD chart.
 
-Tools Used: YFinance for data, TA-Lib for indicators, PyNance for metrics.
+---
 
-Metrics Calculated:
+### 3. Sentiment & Correlation Analysis
+**Goal:** Correlate headline sentiment with stock returns.  
+**Method:**  
+- TextBlob polarity and VADER compound scores applied to headlines.  
+- Daily sentiment aggregated per ticker.  
+- Daily returns computed from closing prices.  
+- Correlations (Pearson, Spearman, Kendall) calculated globally and per ticker.  
 
-SMA (Simple Moving Average): For trend identification (20-day & 50-day).
+**Findings:**  
+- Global correlation: weak positive (~0.16 Pearson).  
+- NVDA shows strongest positive correlation (VADER Pearson 0.52, Spearman 0.80).  
+- GOOG shows weak negative correlation.  
+- AAPL & AMZN show extreme values due to anomalies.  
+**Visuals:** Scatter plots (TextBlob & VADER vs returns), Pearson heatmap, per-ticker bar chart.
 
-RSI (Relative Strength Index): To spot overbought/oversold conditions.
+---
 
-MACD: To track market momentum.
+##  Results Summary
+- Sentiment exhibits weak but notable alignment with daily returns.  
+- VADER consistently outperforms TextBlob in predictive strength.  
+- NVDA demonstrates the most promising sentiment-return relationship.  
+- Correlation is noisy, consistent with financial market complexity.  
 
-Volatility & Sharpe Ratio: To assess risk-adjusted returns.
+---
 
-3. Sentiment Analysis (Upcoming)
-Goal: Correlate headline polarity with stock returns.
+##  Limitations & Future Work
+- Correlation ≠ causation; sentiment may align but not drive returns.  
+- Data sparsity and publisher bias distort results.  
+- Outliers inflate correlation values.  
 
-Method: TextBlob will score headlines (-1 to +1). We will then calculate the Pearson correlation between the Daily Sentiment Score and the Daily Stock Return.
+**Future Improvements:**  
+- Use **FinBERT** for domain-specific sentiment scoring.  
+- Expand dataset to include intraday news and price movements.  
+- Weight sentiment by publisher credibility.  
 
-Usage
-Running the Analysis
-The core analysis is contained in the notebooks/ folder. To launch the environment:
+---
 
-Bash
-
+## Usage
+Run the analysis notebooks:  
+```bash
 jupyter notebook
-Open EDA.ipynb for news data insights.
+```
+- Open `EDA.ipynb` for news insights.  
+- Open `Technical_Analysis.ipynb` for stock indicators.  
+- Open `Sentiment_Correlation.ipynb` for sentiment-return correlation.  
 
-Open Technical_Analysis.ipynb for stock charts and metrics.
+---
 
-Using the Source Modules
-You can import the custom modules in your own scripts:
 
-Python
-
-from src.loader import load_news_data
-from src.analysis import apply_technical_indicators
-
-# Load and process data
-df = load_news_data('data/raw_news.csv')
-df_indicators = apply_technical_indicators(stock_data)
-Contributing
-Fork the repository.
-
-Create a feature branch (git checkout -b feature/YourFeature).
-
-Commit your changes (git commit -m 'Add some feature').
-
-Push to the branch (git push origin feature/YourFeature).
-
-Open a Pull Request.
